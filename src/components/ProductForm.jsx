@@ -22,12 +22,12 @@ const ProductForm = ({ onSubmit, editingProduct }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="product_name" placeholder="Name" value={formData.product_name} onChange={handleChange} />
-      <input name="price" type="number" placeholder="Price" value={formData.price} onChange={handleChange} />
-      <input name="stock" type="number" placeholder="Stock" value={formData.stock} onChange={handleChange} />
-      <input name="category_id" placeholder="Category ID" value={formData.category_id} onChange={handleChange} />
-      <button type="submit">{editingProduct ? 'Update' : 'Add'} Product</button>
+    <form onSubmit={handleSubmit} className="space-y-2 mb-6 bg-gray-100 p-4 rounded">
+      <input name="product_name" placeholder="Name" value={formData.product_name} onChange={handleChange} className="w-full p-2 border rounded" />
+      <input name="price" type="number" placeholder="Price" value={formData.price} onChange={handleChange} className="w-full p-2 border rounded" />
+      <input name="stock" type="number" placeholder="Stock" value={formData.stock} onChange={handleChange} className="w-full p-2 border rounded" />
+      <input name="category_id" placeholder="Category ID" value={formData.category_id} onChange={handleChange} className="w-full p-2 border rounded" />
+      <button className="bg-blue-600 text-white px-4 py-2 rounded w-full" type="submit">{editingProduct ? 'Update' : 'Add'} Product</button>
     </form>
   );
 };

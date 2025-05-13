@@ -25,12 +25,12 @@ const CustomerForm = ({ onSubmit, editingCustomer }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="customer_name" value={formData.customer_name} onChange={handleChange} placeholder="Name" />
-      <input name="address" value={formData.address} onChange={handleChange} placeholder="Address" />
-      <input name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="Phone" />
-      <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" />
-      <button type="submit">{editingCustomer ? 'Update' : 'Add'} Customer</button>
+    <form onSubmit={handleSubmit} className="space-y-2 mb-6 bg-gray-100 p-4 rounded">
+      <input name="customer_name" value={formData.customer_name} onChange={handleChange} placeholder="Name" className="w-full p-2 border rounded" />
+      <input name="address" value={formData.address} onChange={handleChange} placeholder="Address" className="w-full p-2 border rounded" />
+      <input name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="Phone" className="w-full p-2 border rounded" />
+      <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="w-full p-2 border rounded" />
+      <button className="bg-blue-600 text-white px-4 py-2 rounded w-full" type="submit">{editingCustomer ? 'Update' : 'Add'} Customer</button>
     </form>
   );
 };
