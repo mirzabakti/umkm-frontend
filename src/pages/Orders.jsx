@@ -8,6 +8,7 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     const res = await API.get('/orders');
+    console.log('orders:', res.data); // Tambahkan ini
     setOrders(res.data);
   };
 

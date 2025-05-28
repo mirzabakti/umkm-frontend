@@ -30,10 +30,10 @@ const Cart = () => {
         quantity: item.qty,
         price: item.price
       }));
-      await API.post('/orders', { customer_id, items });
+      const orderRes = await API.post('/orders', { customer_id, items });
       clearCart();
-      setMessage('Checkout berhasil! Pesanan Anda telah dibuat.');
-      setTimeout(() => navigate('/catalog'), 1500);
+      setMessage('Checkout berhasil!');
+      setTimeout(() => navigate(`/payment/${orderRes.data.order_id}`), 1000);
     } catch (err) {
       setMessage(err.response?.data?.message || 'Checkout gagal');
     } finally {
