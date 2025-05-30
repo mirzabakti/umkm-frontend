@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import API from '../services/api';
 import ProductForm from '../components/ProductForm';
 import ProductList from '../components/ProductList';
+import Navbar from '../components/Navbar';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -34,11 +35,14 @@ const Products = () => {
   }, []);
 
   return (
-    <div className='max-w-xl mx-auto p-6'>
-      <h2 className="text-2xl font-bold mb-4">Product Management</h2>
-      <ProductForm onSubmit={handleSubmit} editingProduct={editing} />
-      <ProductList products={products} onEdit={handleEdit} onDelete={handleDelete} />
-    </div>
+    <>
+      <Navbar />
+      <div className='max-w-xl mx-auto p-6'>
+        <h2 className="text-2xl font-bold mb-4">Product Management</h2>
+        <ProductForm onSubmit={handleSubmit} editingProduct={editing} />
+        <ProductList products={products} onEdit={handleEdit} onDelete={handleDelete} />
+      </div>
+    </>
   );
 };
 

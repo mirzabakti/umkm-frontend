@@ -10,10 +10,19 @@ import Cart from './pages/Cart';
 import OrderHistory from './pages/OrderHistory';
 import OrderDetail from './pages/OrderDetail';
 import Payment from './pages/Payment';
+import Profile from './pages/Profile';
 
 function RequireAdmin({ children }) {
   const user = JSON.parse(localStorage.getItem('user'));
   if (!user || (user.role !== 'admin' && user.role !== 'owner')) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
+function RequireCustomer({ children }) {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user || user.role !== 'customer') {
     return <Navigate to="/login" replace />;
   }
   return children;
@@ -31,6 +40,7 @@ function App() {
         <Route path="/orders/history" element={<OrderHistory />} />
         <Route path="/order/:id" element={<OrderDetail />} />
         <Route path="/payment/:order_id" element={<Payment />} />
+        <Route path="/profile" element={<RequireCustomer><Profile /></RequireCustomer>} />
         <Route path="/products" element={<RequireAdmin><Products /></RequireAdmin>} />
         <Route path="/orders" element={<RequireAdmin><Orders /></RequireAdmin>} />
         <Route path="/" element={<RequireAdmin><Customers /></RequireAdmin>} />

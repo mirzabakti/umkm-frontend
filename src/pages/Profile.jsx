@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import API from '../services/api';
+import Navbar from '../components/Navbar';
 
 const Profile = () => {
   const [formData, setFormData] = useState({
@@ -50,24 +51,37 @@ const Profile = () => {
     }
   };
 
-  if (loading) return <div className="text-center p-4">Loading...</div>;
-  if (error) return <div className="text-center text-red-500 p-4">{error}</div>;
+  if (loading) return (
+    <>
+      <Navbar />
+      <div className="text-center p-4">Loading...</div>
+    </>
+  );
+  if (error) return (
+    <>
+      <Navbar />
+      <div className="text-center text-red-500 p-4">{error}</div>
+    </>
+  );
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Profil Saya</h2>
-      <form onSubmit={handleSubmit} className="space-y-2 mb-6 bg-gray-100 p-4 rounded">
-        <input name="customer_name" value={formData.customer_name} onChange={handleChange} placeholder="Nama" className="w-full p-2 border rounded" />
-        <input name="address" value={formData.address} onChange={handleChange} placeholder="Alamat" className="w-full p-2 border rounded" />
-        <input name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="No HP" className="w-full p-2 border rounded" />
-        <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="w-full p-2 border rounded" disabled />
-        <button className="bg-blue-600 text-white px-4 py-2 rounded w-full" type="submit">
-          Update Profil
-        </button>
-        {success && <div className="text-green-600 text-center">{success}</div>}
-        {error && <div className="text-red-500 text-center">{error}</div>}
-      </form>
-    </div>
+    <>
+      <Navbar />
+      <div className="max-w-xl mx-auto p-6">
+        <h2 className="text-2xl font-bold mb-4">Profil Saya</h2>
+        <form onSubmit={handleSubmit} className="space-y-2 mb-6 bg-gray-100 p-4 rounded">
+          <input name="customer_name" value={formData.customer_name} onChange={handleChange} placeholder="Nama" className="w-full p-2 border rounded" />
+          <input name="address" value={formData.address} onChange={handleChange} placeholder="Alamat" className="w-full p-2 border rounded" />
+          <input name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="No HP" className="w-full p-2 border rounded" />
+          <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="w-full p-2 border rounded" disabled />
+          <button className="bg-blue-600 text-white px-4 py-2 rounded w-full" type="submit">
+            Update Profil
+          </button>
+          {success && <div className="text-green-600 text-center">{success}</div>}
+          {error && <div className="text-red-500 text-center">{error}</div>}
+        </form>
+      </div>
+    </>
   );
 };
 

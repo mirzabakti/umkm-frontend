@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import API from '../services/api';
 import CustomerForm from '../components/CustomerForm';
 import CustomerList from '../components/CustomerList';
+import Navbar from '../components/Navbar';
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
@@ -34,11 +35,14 @@ const Customers = () => {
   }, []);
 
   return (
-    <div className="max-w-xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Customer Management</h2>
-      <CustomerForm onSubmit={handleCreateOrUpdate} editingCustomer={editing} />
-      <CustomerList customers={customers} onEdit={handleEdit} onDelete={handleDelete} />
-    </div>
+    <>
+      <Navbar />
+      <div className="max-w-xl mx-auto p-6">
+        <h2 className="text-2xl font-bold mb-4">Customer Management</h2>
+        <CustomerForm onSubmit={handleCreateOrUpdate} editingCustomer={editing} />
+        <CustomerList customers={customers} onEdit={handleEdit} onDelete={handleDelete} />
+      </div>
+    </>
   );
 };
 
