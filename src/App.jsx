@@ -13,6 +13,7 @@ import Payment from './pages/Payment';
 import Profile from './pages/Profile';
 import DiscountCategoriesPage from './pages/DiscountCategoriesPage';
 import DiscountsPage from './pages/DiscountsPage';
+import WishlistPage from './pages/WishlistPage';
 
 function RequireAdmin({ children }) {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -43,6 +44,7 @@ function App() {
         <Route path="/order/:id" element={<OrderDetail />} />
         <Route path="/payment/:order_id" element={<Payment />} />
         <Route path="/profile" element={<RequireCustomer><Profile /></RequireCustomer>} />
+        <Route path="/wishlist" element={<RequireCustomer><WishlistPage /></RequireCustomer>} />
         <Route path="/products" element={<RequireAdmin><Products /></RequireAdmin>} />
         <Route path="/orders" element={<RequireAdmin><Orders /></RequireAdmin>} />
         <Route path="/discount-categories" element={<RequireAdmin><DiscountCategoriesPage /></RequireAdmin>} />

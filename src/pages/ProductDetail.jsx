@@ -14,11 +14,14 @@ const ProductDetail = () => {
   const [error, setError] = useState('');
   const [reviewsError, setReviewsError] = useState(null); // Error state for reviews
   const [added, setAdded] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false); // State for wishlist status
   const { addToCart } = useCart();
 
   // Get user from localStorage to check role and customer_id
   const user = JSON.parse(localStorage.getItem('user'));
   const isCustomer = user && user.role === 'customer';
+  const customer_id = user?.customer_id; // Get customer_id
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -26,6 +29,8 @@ const ProductDetail = () => {
         const res = await API.get(`/products/${id}`);
         setProduct(res.data);
         setLoading(false);
+        // After product is fetched, check wishlist status
+        checkWishlistStatus(res.data); // Pass product data to checkWishlistStatus
       } catch (err) {
         setError('Gagal memuat detail produk');
         setLoading(false);
@@ -46,10 +51,24 @@ const ProductDetail = () => {
         }
     };
 
+    const checkWishlistStatus = async (productData) => {
+        if (!isCustomer || !customer_id || !token || !productData) return; // Only check if customer is logged in and productData is available
+        try {
+             const config = { headers: { Authorization: `Bearer ${token}` } };
+             const wishlistRes = await API.get(`/wishlists/${customer_id}`, config);
+             const wishlisted = wishlistRes.data.some(item => item.product_id === productData.product_id); // Use productData
+             setIsWishlisted(wishlisted);
+
+        } catch (err) {
+            console.error('Error checking wishlist status:', err);
+            setIsWishlisted(false);
+        }
+    };
+
     fetchProduct();
     fetchReviews();
 
-  }, [id]);
+  }, [id, isCustomer, customer_id, token]); // Corrected dependencies
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -60,31 +79,56 @@ const ProductDetail = () => {
   // Function to handle adding a new review
   const handleAddReview = async (reviewData) => {
       try {
-          // Make sure customer_id is included (though it's also fetched in the form)
           if (!reviewData.customer_id) {
               console.error('Customer ID is missing for review submission.');
-               // TODO: Show error to user
               return;
           }
-           // Pass the JWT token for authentication
           const token = localStorage.getItem('token');
           const config = {
               headers: {
                   Authorization: `Bearer ${token}`
               }
           };
-          
           await API.post('/product-reviews', reviewData, config);
           console.log('Review submitted successfully!');
-          // Refresh the reviews list after successful submission
           fetchReviews();
-          // TODO: Show success message to user
       } catch (err) {
           console.error('Error submitting review:', err);
-          // TODO: Handle specific backend validation errors if needed
-           // TODO: Show error message to user
       }
   };
+
+   const handleWishlistToggle = async () => {
+        // debugger;
+       if (!isCustomer || !customer_id || !token || !product) { // Add check for product
+           alert('Anda harus login sebagai customer dan produk harus dimuat untuk menambahkan ke wishlist.');
+           return;
+       }
+
+       try {
+           const config = { headers: { Authorization: `Bearer ${token}` } };
+
+           if (isWishlisted) {
+               // Remove from wishlist
+                const wishlistRes = await API.get(`/wishlists/${customer_id}`, config);
+                const wishlistItem = wishlistRes.data.find(item => item.product_id === product.product_id);
+
+                if (wishlistItem) {
+                     await API.delete(`/wishlists/${wishlistItem.wishlist_id}`, config);
+                     console.log('Removed from wishlist!');
+                     setIsWishlisted(false);
+                }
+
+           } else {
+               // Add to wishlist
+                const newWishlistItem = { product_id: product.product_id, customer_id: customer_id };
+                await API.post('/wishlists', newWishlistItem, config);
+                console.log('Added to wishlist!');
+                setIsWishlisted(true);
+           }
+       } catch (err) {
+           console.error('Error toggling wishlist status:', err);
+       }
+   };
 
 
   if (loading) return <div className="text-center p-4">Loading...</div>;
@@ -106,12 +150,27 @@ const ProductDetail = () => {
             <p className="text-2xl text-gray-800 mb-4">Rp {product.price.toLocaleString()}</p>
             <p className="text-gray-600 mb-4">Stok: {product.stock}</p>
             <p className="text-gray-700 mb-6">{product.description || 'Tidak ada deskripsi'}</p>
-            <button
-              className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700"
-              onClick={handleAddToCart}
-            >
-              Tambah ke Cart
-            </button>
+            
+            {/* Add to Cart and Add to Wishlist buttons */}
+            <div className="flex space-x-4 mb-4">
+                <button
+                  className="flex-1 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700"
+                  onClick={handleAddToCart}
+                >
+                  Tambah ke Cart
+                </button>
+
+                 {/* Wishlist Button (conditionally rendered for customers) */}
+                {isCustomer && (
+                    <button
+                         className={`flex-1 py-3 rounded-lg ${isWishlisted ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-600 hover:bg-gray-700'} text-white`}
+                         onClick={handleWishlistToggle}
+                    >
+                       {isWishlisted ? 'Hapus dari Wishlist' : 'Tambah ke Wishlist'}
+                    </button>
+                )}
+            </div>
+
             {added && <div className="mt-3 text-green-600 text-center">Ditambahkan ke keranjang!</div>}
           </div>
         </div>

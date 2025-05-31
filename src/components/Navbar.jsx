@@ -21,6 +21,7 @@ const Navbar = () => {
           {user && user.role === 'customer' && (
             <>
               <Link to="/cart" className="hover:underline">Keranjang</Link>
+              <Link to="/wishlist" className="hover:underline">Wishlist</Link>
               <Link to="/orders/history" className="hover:underline">Riwayat Order</Link>
               <Link to="/profile" className="hover:underline">Profil</Link>
             </>
