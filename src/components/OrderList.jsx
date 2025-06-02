@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 const BACKEND_URL = "http://localhost:5000";
 
-const OrderList = ({ orders }) => {
+const OrderList = ({ orders, onCreateDeliveryClick, onUpdateStatusClick }) => {
   const [verifying, setVerifying] = useState(null);
 
   const handleVerify = async (order_id) => {
@@ -38,12 +38,28 @@ const OrderList = ({ orders }) => {
           </div>
           {o.status === 'Sudah Dibayar' && o.payment_proof && (
             <button
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-max"
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-max mr-2"
               onClick={() => handleVerify(o.order_id)}
               disabled={verifying === o.order_id}
             >
               {verifying === o.order_id ? 'Memverifikasi...' : 'Verifikasi Pembayaran'}
             </button>
+          )}
+          {o.status === 'Terverifikasi' && (
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-max"
+              onClick={() => onCreateDeliveryClick(o)}
+            >
+              Buat Pengiriman
+            </button>
+          )}
+          {o.status !== 'Selesai' && o.status !== 'Dibatalkan' && (
+             <button
+               className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 w-max ml-2"
+               onClick={() => onUpdateStatusClick(o)}
+             >
+               Update Status
+             </button>
           )}
         </li>
       ))}
