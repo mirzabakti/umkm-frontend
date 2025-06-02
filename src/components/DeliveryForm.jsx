@@ -83,15 +83,19 @@ const DeliveryForm = ({ order, delivery, onSubmit, onCancel }) => {
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="status">Status Pengiriman</label>
             {/* Status could be a dropdown in a real app */}
-            <input
-              type="text"
+            <select
               id="status"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               required
-              disabled // Status awal bisa diatur di backend atau tidak diizinkan diubah saat pembuatan
-            />
+            >
+                <option value="Pending Shipment">Pending Shipment</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Failed Attempt">Failed Attempt</option>
+                {/* Add more status options as needed */}
+            </select>
           </div>
 
           <div className="mb-4">
