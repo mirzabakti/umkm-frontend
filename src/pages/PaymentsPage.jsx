@@ -108,7 +108,7 @@ const PaymentsPage = () => {
                         <th className="py-2 px-4 border-b">Tanggal Pembayaran</th>
                         <th className="py-2 px-4 border-b">Status</th>
                         <th className="py-2 px-4 border-b">Bukti Pembayaran</th>
-                        <th className="py-2 px-4 border-b">Aksi</th>
+                        {/* <th className="py-2 px-4 border-b">Aksi</th> */}
                     </tr>
                 </thead>
                 <tbody>

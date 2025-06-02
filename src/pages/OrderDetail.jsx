@@ -7,6 +7,7 @@ const OrderDetail = () => {
   const { id } = useParams();
   const [order, setOrder] = useState(null);
   const [delivery, setDelivery] = useState(null);
+  const [payment, setPayment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -16,8 +17,15 @@ const OrderDetail = () => {
         const orderRes = await API.get(`/orders/${id}`);
         setOrder(orderRes.data);
 
+        const token = localStorage.getItem('token');
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
         try {
-          const deliveryRes = await API.get(`/deliveries/order/${id}`);
+          const deliveryRes = await API.get(`/deliveries/order/${id}`, config);
           setDelivery(deliveryRes.data);
         } catch (deliveryErr) {
           if (deliveryErr.response && deliveryErr.response.status === 404) {
@@ -25,6 +33,18 @@ const OrderDetail = () => {
             console.log('Delivery info not found for this order.');
           } else {
             console.error('Error fetching delivery info:', deliveryErr);
+          }
+        }
+
+        try {
+          const paymentRes = await API.get(`/api/payments/order/${id}`, config);
+          setPayment(paymentRes.data);
+        } catch (paymentErr) {
+          if (paymentErr.response && paymentErr.response.status === 404) {
+            setPayment(null);
+            console.log('Payment info not found for this order yet.');
+          } else {
+            console.error('Error fetching payment info:', paymentErr);
           }
         }
 
@@ -76,6 +96,27 @@ const OrderDetail = () => {
             </>
           ) : (
             <p>Informasi pengiriman belum tersedia.</p>
+          )}
+        </div>
+
+        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+          <h2 className="text-xl font-semibold mb-3">Informasi Pembayaran</h2>
+          {payment ? (
+            <>
+              <div className="mb-2">ID Pembayaran: <span className="font-semibold">{payment.payment_id}</span></div>
+              <div className="mb-2">Metode Pembayaran: {payment.payment_method}</div>
+              <div className="mb-2">Jumlah Dibayar: Rp {parseFloat(payment.amount).toLocaleString()}</div>
+              {payment.payment_date && <div className="mb-2">Tanggal Pembayaran: {new Date(payment.payment_date).toLocaleDateString()}</div>}
+              <div className="mb-2">Status Pembayaran: <span className="font-semibold">{payment.status || '-'}</span></div>
+              {payment.payment_proof_path && (
+                <div className="mb-2">
+                  Bukti Pembayaran: 
+                  <a href={`http://localhost:5000${payment.payment_proof_path}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline ml-2">Lihat Bukti</a>
+                </div>
+              )}
+            </>
+          ) : (
+            <p>Informasi pembayaran belum tersedia atau sedang menunggu unggahan bukti.</p>
           )}
         </div>
 
