@@ -33,6 +33,7 @@ const Navbar = () => {
               <Link to="/discount-categories" className="hover:underline">Kategori Diskon</Link>
               <Link to="/discounts" className="hover:underline">Diskon</Link>
               <Link to="/deliveries" className="hover:underline">Pengiriman</Link>
+              <Link to="/payments" className="hover:underline">Pembayaran</Link>
               <Link to="/" className="hover:underline">Customer</Link>
             </>
           )}

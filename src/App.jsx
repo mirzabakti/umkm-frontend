@@ -16,6 +16,7 @@ import DiscountsPage from './pages/DiscountsPage';
 import WishlistPage from './pages/WishlistPage';
 import DeliveriesPage from './pages/DeliveriesPage';
 import DeliveryDetail from './pages/DeliveryDetail';
+import PaymentsPage from './pages/PaymentsPage';
 
 function RequireAdmin({ children }) {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -53,6 +54,7 @@ function App() {
         <Route path="/discounts" element={<RequireAdmin><DiscountsPage /></RequireAdmin>} />
         <Route path="/deliveries" element={<RequireAdmin><DeliveriesPage /></RequireAdmin>} />
         <Route path="/deliveries/:deliveryId" element={<RequireAdmin><DeliveryDetail /></RequireAdmin>} />
+        <Route path="/payments" element={<RequireAdmin><PaymentsPage /></RequireAdmin>} />
         <Route path="/" element={<RequireAdmin><Customers /></RequireAdmin>} />
       </Routes>
     </BrowserRouter>
